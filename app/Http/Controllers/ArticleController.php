@@ -21,12 +21,8 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $validated = $request->validated([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string'
-        ]);
-
-        $article = Article::create($validated);
+        logger()->info('Store', $request->all());
+        $article = Article::create($request->all());
         return response()->json($article, 201);
     }
 
@@ -48,18 +44,13 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, int $id)
     {
-        $validated = $request->validated([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string'
-        ]);
-
         $article = Article::find($id);
 
         if (!$article) {
             return response()->json(['message' => 'Article not found'], 404);
         }
 
-        $article->update($validated);
+        $article->update($request->all());
         return response()->json($article, 200);
     }
 
